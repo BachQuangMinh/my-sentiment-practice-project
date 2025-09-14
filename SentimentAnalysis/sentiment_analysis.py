@@ -10,7 +10,14 @@ def sentiment_analyzer(text_to_analyze):
     input_json = { "raw_document": { "text": text_to_analyze } }
     
     response = requests.post(url, headers=headers, json=input_json)
-    formatted_response = response.json()
-    label = formatted_response['documentSentiment']['label']
-    score = formatted_response['documentSentiment']['score']
+
+    if response.status_code == 200:
+        formatted_response = response.json()
+        label = formatted_response['documentSentiment']['label']
+        score = formatted_response['documentSentiment']['score']
+
+    if response.status_code == 500:
+        label = None
+        score = None
+    
     return {'label': label, 'score': score}

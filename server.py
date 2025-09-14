@@ -4,8 +4,11 @@
 '''
 # Import Flask, render_template, request from the flask pramework package : TODO
 # Import the sentiment_analyzer function from the package created: TODO
+from flask import Flask, render_template, request
+from SentimentAnalysis.sentiment_analysis import sentiment_analyzer
 
 #Initiate the flask app : TODO
+app = Flask("Sentiment Analyzer")
 
 @app.route("/sentimentAnalyzer")
 def sent_analyzer():
@@ -14,15 +17,21 @@ def sent_analyzer():
         function. The output returned shows the label and its confidence 
         score for the provided text.
     '''
-    # TODO
+    text_to_analyze = request.args.get('textToAnalyze')
+    result = sentiment_analyzer(text_to_analyze)
+    label = result['label']
+    formatted_label = label.split('_')[1]
+    score = result['score']
+    return f'The given text has been identified {formatted_label} with a score of {score}'
 
 @app.route("/")
 def render_index_page():
     ''' This function initiates the rendering of the main application
         page over the Flask channel
     '''
-    #TODO
+    return render_template('index.html')
 
 if __name__ == "__main__":
     ''' This functions executes the flask app and deploys it on localhost:5000
-    '''#TODO
+    '''
+    app.run(host="0.0.0.0", port=5000)
